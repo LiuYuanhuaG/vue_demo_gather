@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "yarn run biz-init &&  vue-cli-service serve",
+    "build": "yarn run biz-init &&  vue-cli-service build",
     "lint": "vue-cli-service lint",
     "biz-init": "ts-node scripts/generateBizConfig.ts",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
