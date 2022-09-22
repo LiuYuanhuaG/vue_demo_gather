@@ -1,11 +1,11 @@
 const { defineConfig } = require('@vue/cli-service');
-const AutoImport = require('unplugin-auto-import/webpack');
-const Components = require('unplugin-vue-components/webpack');
-// const { BASEPATH } = require('./config/config.ts');
-const {
-  ElementPlusResolver,
-  AntDesignVueResolver,
-} = require('unplugin-vue-components/resolvers');
+// const AutoImport = require('unplugin-auto-import/webpack');
+// const Components = require('unplugin-vue-components/webpack');
+// // const { BASEPATH } = require('./config/config.ts');
+// const {
+//   ElementPlusResolver,
+//   AntDesignVueResolver,
+// } = require('unplugin-vue-components/resolvers'); // 自动导入 ant
 
 module.exports = defineConfig({
   transpileDependencies: true,
@@ -13,15 +13,15 @@ module.exports = defineConfig({
   devServer: {
     open: true,
   },
-  publicPath: process.env.NODE_ENV === 'production' ? 'vue_demo_gather' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/vue_demo_gather/' : '/',
   configureWebpack: {
-    plugins: [
-      AutoImport({
-        resolvers: [ElementPlusResolver(), AntDesignVueResolver()],
-      }),
-      Components({
-        resolvers: [ElementPlusResolver(), AntDesignVueResolver()],
-      }),
-    ],
+    // plugins: [
+    //   AutoImport({
+    //     resolvers: [ElementPlusResolver(), AntDesignVueResolver()],
+    //   }),
+    //   Components({
+    //     resolvers: [ElementPlusResolver(), AntDesignVueResolver()],
+    //   }),
+    // ],
   },
 });

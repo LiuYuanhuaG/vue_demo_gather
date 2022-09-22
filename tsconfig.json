@@ -13,7 +13,8 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env"
+      "webpack-env",
+      "node", // 添加node 否则node脚本ts会提示报错
     ],
     "paths": {
       "@/*": [
