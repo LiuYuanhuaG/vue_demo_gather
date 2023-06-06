@@ -1,6 +1,6 @@
 <template>
   <a-layout class="basicLayout-wrap">
-    <Header />
+    <!-- <Header /> -->
     <a-layout class="cc_on">
       <SideMenu v-bind="layoutConf" />
       <a-layout class="basicLayout-content">
@@ -20,7 +20,7 @@
             <router-view v-slot="{ Component, route }">
               <transition name="fade-slide" mode="out-in" appear>
                 <!-- https://www.jianshu.com/p/399667ec9ef8 -->
-                <div :key="route.name">
+                <div :key="route.name" class="l-content">
                   <component :is="Component" />
                 </div>
               </transition>
@@ -30,7 +30,7 @@
             <!-- <router-view /> -->
             <router-view v-slot="{ Component, route }">
               <transition name="fade-slide" mode="out-in" appear>
-                <div :key="route.name">
+                <div :key="route.name" class="l-content">
                   <component :is="Component" />
                 </div>
               </transition>
@@ -43,7 +43,7 @@
 </template>
 <script setup lang="ts">
 import { Route } from "ant-design-vue/es/breadcrumb/Breadcrumb";
-import Header from "./components/Header.vue";
+// import Header from "./components/Header.vue";
 import SideMenu from "./components/SideMenu";
 import { clearMenuItem, filterRoutes } from "./utils";
 import router from "@/router";
@@ -89,7 +89,7 @@ const handleBreadcrumb = () => {
     overflow-y: auto;
     margin: 0;
     padding: 24px;
-    height: calc(100vh - 80px);
+    // height: calc(100vh - 80px);
     background: "#F0F1F4";
 
     .layout-content {
@@ -99,7 +99,10 @@ const handleBreadcrumb = () => {
 
     .layout-content-a-card {
       height: 100%;
-
+      .l-content {
+        height: 100%;
+        overflow: auto;
+      }
       > div {
         height: 100%;
         position: relative;
