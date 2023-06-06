@@ -103,7 +103,14 @@ function listHeight() {
 function getTransform() {
   return `translate3d(0,${_startOffset.value}px,0)`;
 }
-
+var observer = new IntersectionObserver(
+  (e) => {
+    console.log(e);
+  },
+  {
+    root: _$refs.value.parent,
+  }
+);
 function scrollToTop() {
   _$refs.value.scrollTo({
     top: 0,

@@ -3,30 +3,59 @@
     <div class="s select-box">
       <div class="s select-head">
         <input ref="input_s" :value="valueRef" @click="selectClick" />
-        <i class="s inputIcon" @click="selectClick"
-          :style="{ transform: `rotate(${IsBodyShowRef ? '180deg' : '0deg'})`, }">
+        <i
+          class="s inputIcon"
+          @click="selectClick"
+          :style="{ transform: `rotate(${IsBodyShowRef ? '180deg' : '0deg'})` }"
+        >
           <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-            <path fill="currentColor"
-              d="m488.832 344.32-339.84 356.672a32 32 0 0 0 0 44.16l.384.384a29.44 29.44 0 0 0 42.688 0l320-335.872 319.872 335.872a29.44 29.44 0 0 0 42.688 0l.384-.384a32 32 0 0 0 0-44.16L535.168 344.32a32 32 0 0 0-46.336 0z">
-            </path>
+            <path
+              fill="currentColor"
+              d="m488.832 344.32-339.84 356.672a32 32 0 0 0 0 44.16l.384.384a29.44 29.44 0 0 0 42.688 0l320-335.872 319.872 335.872a29.44 29.44 0 0 0 42.688 0l.384-.384a32 32 0 0 0 0-44.16L535.168 344.32a32 32 0 0 0-46.336 0z"
+            ></path>
           </svg>
         </i>
       </div>
 
-      <div class="s select-body" :style="{ display: IsBodyShowRef ? 'block' : 'none', top: 'auto' }">
+      <div
+        class="s select-body"
+        :style="{ display: IsBodyShowRef ? 'block' : 'none', top: 'auto' }"
+      >
         <div class="select-bar"><span></span></div>
         <div class="select-value-body">
           <div class="s search-input">
-            <input ref="search_input" @change="searchChange" class="s" type="text" placeholder="搜索">
+            <input
+              ref="search_input"
+              @change="searchChange"
+              class="s"
+              type="text"
+              placeholder="搜索"
+            />
             <i class="s"></i>
           </div>
-          <div class="s value-body" ref="_$refs" @scroll="scrollEvent" :style="{ height: valueBodyHeight }">
-            <div class="infinite-list-phantom" :style="{ height: `${listHeight()}px` }"></div>
-            <div class="select-list-body" v-if="_visibleData.length" :style="{ transform: getTransform(), }">
-              <li @click="itemClick(item)" v-for="(item, i) in _visibleData" :key="i"
-                :style="{ height: `${itemSize - 2}px` }">{{
-                    item.title
-                }}</li>
+          <div
+            class="s value-body"
+            ref="_$refs"
+            @scroll="scrollEvent"
+            :style="{ height: valueBodyHeight }"
+          >
+            <div
+              class="infinite-list-phantom"
+              :style="{ height: `${listHeight()}px` }"
+            ></div>
+            <div
+              class="select-list-body"
+              v-if="_visibleData.length"
+              :style="{ transform: getTransform() }"
+            >
+              <li
+                @click="itemClick(item)"
+                v-for="(item, i) in _visibleData"
+                :key="i"
+                :style="{ height: `${itemSize - 2}px` }"
+              >
+                {{ item.title }}
+              </li>
             </div>
             <div class="none" v-else>暂无匹配选项</div>
           </div>
@@ -37,50 +66,50 @@
 </template>
 
 <script  setup>
-import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { ref, reactive, computed, onMounted, watch, defineProps } from "vue";
 
-const value = ref('')
+const value = ref("");
 const props = defineProps({
   // 获取真实显示列表数据
   arr: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   // 列表item的高度
   itemSize: {
     type: Number,
-    default: 34
+    default: 34,
   },
   // 结束索引
   end: {
     type: Number,
-    default: 0
+    default: 0,
   },
   // 起始索引
   start: {
     type: Number,
-    default: 0
+    default: 0,
   },
   //替换数据字段
   substitute: {
     type: Object,
     default: () => ({
-      key: 'id',
-      title: 'title',
-      content: 'content'
-    })
+      key: "id",
+      title: "title",
+      content: "content",
+    }),
   },
   // 回到顶部按钮位置
   scrollTopBtnPos: {
     type: Number,
-    default: 200
+    default: 200,
   },
   // 初始 选项列表高度
   visListHeight: {
     type: Number,
-    default: 150
-  }
-})
+    default: 150,
+  },
+});
 // 可显示的列表项数
 let _visibleCount = 0;
 // 偏移量
@@ -88,47 +117,46 @@ let _startOffset = reactive(0);
 // 起始索引
 let _start = ref(props.start);
 // 结束索引
-let _end = ref(props.end)
+let _end = ref(props.end);
 // 列表item的高度
-let _itemSize = reactive(props.itemSize)
+let _itemSize = reactive(props.itemSize);
 // 滚动盒子实例
-let _$refs = ref()
+let _$refs = ref();
 
 // 可视区域高度
-let _screenHeight = ref(props.visListHeight)
+let _screenHeight = ref(props.visListHeight);
 // 是否展示列表
-let IsBodyShowRef = ref(false)
+let IsBodyShowRef = ref(false);
 // 下拉框input的值
-let valueRef = ref('')
+let valueRef = ref("");
 // 下拉框input元素
-let input_s = ref('')
+let input_s = ref("");
 //搜索input
-let search_input = ref()
+let search_input = ref();
 //所有数据
-let allData = ref(props.arr)
-
+let allData = ref(props.arr);
 
 // 列表总高度
-function listHeight () {
+function listHeight() {
   return allData.value.length * _itemSize;
 }
 
 // 偏移量对应的style
-function getTransform () {
+function getTransform() {
   return `translate3d(0,${_startOffset}px,0)`;
 }
 
 const _visibleData = computed({
-  get: () => {   // 3. 当 name 的值被修改后，触发 get 方法
+  get: () => {
+    // 3. 当 name 的值被修改后，触发 get 方法
     return props.arr.slice(
       _start.value,
       Math.min(_end.value, allData.value.length)
-    )
-  }
-})
+    );
+  },
+});
 
-
-function scrollEvent (e) {
+function scrollEvent(e) {
   // 当前滚动位置
   const scrollTop = _$refs.value.scrollTop;
   // 此时的开始索引
@@ -139,68 +167,61 @@ function scrollEvent (e) {
   _startOffset = scrollTop - (scrollTop % _itemSize);
 }
 
-
-
-
 const valueBodyHeight = computed({
-  get: () => {   // 3. 当 name 的值被修改后，触发 get 方法
+  get: () => {
+    // 3. 当 name 的值被修改后，触发 get 方法
     console.log(`${_itemSize * _visibleData.value.length}px`);
-    return `${_itemSize * _visibleData.value.length}px`
-  }
-})
+    return `${_itemSize * _visibleData.value.length}px`;
+  },
+});
 
 // 打开列表展示
-function selectClick (e) {
+function selectClick(e) {
   e.stopPropagation();
-  input_s.value && input_s.value.focus()
-  IsBodyShowRef.value = !IsBodyShowRef.value
+  input_s.value && input_s.value.focus();
+  IsBodyShowRef.value = !IsBodyShowRef.value;
 }
-
 
 // 每一个元素点击
-function itemClick (val) {
-  valueRef.value = val.value
+function itemClick(val) {
+  valueRef.value = val.value;
 }
 
-function searchChange (e) {
-  let val = e.target.value
+function searchChange(e) {
+  let val = e.target.value;
   if (!val) {
-    allData.value = props.arr
+    allData.value = props.arr;
   } else {
-    allData.value = allData.value.filter(item => {
+    allData.value = allData.value.filter((item) => {
       var reg = new RegExp(val);
-      return reg.test(item.content)
-    })
+      return reg.test(item.content);
+    });
     console.log(allData.value);
   }
-
 }
 
 // watch()
 
 onMounted(() => {
   document.onclick = function (argument) {
-    if (!argument.target.classList.contains('s')) {
-      IsBodyShowRef.value = false
+    if (!argument.target.classList.contains("s")) {
+      IsBodyShowRef.value = false;
     }
-  }
+  };
   // _screenHeight.value = _$refs.value.parentNode.clientHeight || document.documentElement.clientHeight || document.body.clientHeight;
   // if (props.arr.length * _itemSize <= props.visListHeight) {
 
   // }
 
-
   // 可显示的列表项数
   _visibleCount = Math.ceil(_screenHeight.value / _itemSize);
 
-  if (
-    allData.value.length < _visibleCount
-  ) {
+  if (allData.value.length < _visibleCount) {
     _end.value = _start.value + allData.value.length;
   } else {
     _end.value = _start.value + _visibleCount;
   }
-})
+});
 </script>
 
 
@@ -225,8 +246,7 @@ onMounted(() => {
 }
 
 .inputIcon {
-
-  transition: transform .5s ease;
+  transition: transform 0.5s ease;
 }
 
 .select-head {
@@ -277,15 +297,15 @@ onMounted(() => {
   width: 100%;
   // border: solid 1px #000;
   border-top: none;
-  background-color: #F5F6FA;
+  background-color: #f5f6fa;
   position: relative;
-  transition: all .5s ease-in-out;
+  transition: all 0.5s ease-in-out;
   border-radius: 5px;
   box-shadow: 1px 2px 3px 0px #efefef;
 }
 
 .select-value-body {
-  background-color: #fFF;
+  background-color: #fff;
 }
 
 .search-input {
@@ -319,7 +339,8 @@ onMounted(() => {
   cursor: pointer;
 }
 
-.search-input i:hover {}
+.search-input i:hover {
+}
 
 .value-body {
   max-height: 150px;
@@ -331,7 +352,7 @@ onMounted(() => {
 .value-body::-webkit-scrollbar {
   width: 15px;
   // height: 15px;'
-  background: #FFF;
+  background: #fff;
 }
 
 .value-body::-webkit-scrollbar-track {
@@ -350,14 +371,12 @@ onMounted(() => {
 }
 
 .value-body::-webkit-scrollbar-thumb:hover {
-  background: #F5F6FA;
+  background: #f5f6fa;
 }
 
 .value-body::-webkit-scrollbar-corner {
-  background: #FFf;
-
+  background: #fff;
 }
-
 
 .value-body li {
   display: flex;
@@ -370,7 +389,7 @@ onMounted(() => {
 
 .value-body li:hover,
 li.active {
-  background-color: #F5F6FA;
+  background-color: #f5f6fa;
 }
 
 .value-body li.none,
@@ -384,7 +403,6 @@ li.active {
   top: 0;
   right: 0;
   z-index: -1;
-
 }
 
 .select-list-body {

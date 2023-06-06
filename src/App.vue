@@ -5,7 +5,7 @@
       <router-link to="/about">About</router-link>
     </nav> -->
 
-    <router-view />
+    <router-view class="111" />
   </ConfigProvider>
 </template>
 
@@ -30,7 +30,9 @@ const locale = ref(zhCN);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+.ant-card-body {
+  height: 100%;
+}
 nav {
   padding: 30px;
 

@@ -1,5 +1,6 @@
 import { GlobalOutlined } from "@ant-design/icons-vue"
 import LeafletLogo from "./leaflet/Index"
+import {} from "history"
 export default {
   path: "/Map",
   name: "Map",
